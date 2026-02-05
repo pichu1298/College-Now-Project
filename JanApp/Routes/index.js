@@ -1,11 +1,21 @@
 const express = require("express");
-const port = process.env.PORT || 3000;
-const app = express();
+const router = new express.Router();
+router.get("/", (req, res) => {
+  res.json("Hello World");
+});
+//access URl params
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
+router.get("/articles/:title", (req, res) => {
+  try {
+    //attempt to run code, if no work we send to catch
+
+    res.json(req.params.title);
+  } catch (error) {}
 });
 
-app.listen(port, () => {
-  console.log(`Server is up on port ${port}`);
+router.post("/login", (req, res) => {
+  console.log(req.body);
+  const { username, password } = req.body;
+  res.json(`${username} is logged in`);
 });
+module.exports = router;
