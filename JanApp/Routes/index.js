@@ -13,12 +13,6 @@ router.get("/articles/:title", (req, res) => {
   } catch (error) {}
 });
 
-//printer incident lol
-router.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  res.json(`${username} is logged in`);
-});
-
 module.exports = router;
 
 // json = javascript object notation, universal for every language

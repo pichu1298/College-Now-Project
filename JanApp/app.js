@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
@@ -13,6 +13,11 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(3000);
+
+const routes = require("./Routes/index");
+
+app.use("/", routes);
+app.use(express.json()); // -> converts things to json for us
 
 // import { Server } from "socket.io";
 // const io = new Server({});
