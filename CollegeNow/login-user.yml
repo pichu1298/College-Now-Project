@@ -1,0 +1,27 @@
+info:
+  name: login-user
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/login"
+  body:
+    type: json
+    data: |-
+      {
+          "username": "yay",
+          "password": "password"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: base_url
+      value: http://127.0.0.1:8000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
