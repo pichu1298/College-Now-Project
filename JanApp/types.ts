@@ -7,6 +7,7 @@ export type User = {
   level: Level;
   stats: UserStats;
   bag: Bag;
+  equipped_items: EquippedItem[];
   friends: Friend[];
 };
 
@@ -47,8 +48,21 @@ export type Bag = {
 export type BagItem = {
   id: number;
   name: string;
-  type: ItemRarity;
+  rarity: ItemRarity;
   quantity: number;
+};
+
+export type EquippedItem = {
+  id: number;
+  name: string;
+  statBoosts?: {
+    physical_attack?: number;
+    magical_attack?: number;
+    defense?: number;
+    agility?: number;
+    luck?: number;
+  };
+  rarity: ItemRarity;
 };
 
 export type ItemRarity = "legendary" | "epic" | "rare" | "uncommon" | "common";

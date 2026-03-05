@@ -16,3 +16,4 @@ module.exports = router;
 
 const shopController = require("../controllers/shopController");
 router.post("/save-shop", shopController.createShop);
+router.post("/save-item", shopController.createItem);
