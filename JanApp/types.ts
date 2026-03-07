@@ -3,6 +3,7 @@ export type User = {
   username: string;
   password: string;
   profile_picture: string;
+  character: File;
 
   level: Level;
   stats: UserStats;
@@ -30,6 +31,7 @@ export type Level = {
 export type Friend = {
   id: number;
   friend_id: number;
+  character: File;
   username: string;
   nickname: string;
 
