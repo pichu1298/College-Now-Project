@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Farm Game Canvas Test</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+        image-rendering: pixelated; /* makes it look sharper for small tiles */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Farm Game</h1>
+    <canvas id="farmCanvas" width="500" height="500"></canvas>
+
+    <!-- Socket.IO client -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      const serverId = "69b313df7f143e09b35c38df"; // replace with real serverId
+      socket.emit("joinServer", serverId);
+
+      const canvas = document.getElementById("farmCanvas");
+      const ctx = canvas.getContext("2d");
+      const tileSize = 10; // 50x50 grid -> 10px per tile
+
+      // Example grid (initially all grass)
+      const grid = Array.from({ length: 50 }, () =>
+        Array.from({ length: 50 }, () => ({ type: "grass", crop: null })),
+      );
+
+      // Draw grid function
+      function drawGrid() {
+        for (let x = 0; x < 50; x++) {
+          for (let y = 0; y < 50; y++) {
+            const tile = grid[x][y];
+            switch (tile.type) {
+              case "grass":
+                ctx.fillStyle = "green";
+                break;
+              case "farmland":
+                ctx.fillStyle = "saddlebrown";
+                break;
+              case "water":
+                ctx.fillStyle = "blue";
+                break;
+            }
+            ctx.fillRect(y * tileSize, x * tileSize, tileSize, tileSize);
+
+            if (tile.crop) {
+              ctx.fillStyle = "yellow"; // simple representation
+              ctx.fillRect(
+                y * tileSize + 2,
+                x * tileSize + 2,
+                tileSize - 4,
+                tileSize - 4,
+              );
+            }
+          }
+        }
+      }
+
+      drawGrid();
+
+      // Listen for updates from Socket.IO
+      socket.on("tileUpdated", ({ x, y, crop, type }) => {
+        grid[x][y].crop = crop;
+        if (type) grid[x][y].type = type; // optional if type can change
+        drawGrid();
+      });
+
+      // Click to plant crop
+      canvas.addEventListener("click", async (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientY - rect.top) / tileSize);
+        const y = Math.floor((e.clientX - rect.left) / tileSize);
+
+        const crop = "corn";
+        await fetch(`http://localhost:3000/servers/${serverId}/grid`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ x, y, crop }),
+        });
+      });
+    </script>
+  </body>
+</html>
