@@ -5,11 +5,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   profile_picture: { type: String, required: false, default: "" },
 
-  inventory: {
-    type: Map,
-    of: { type: Number, default: 0 },
-    default: {},
-  },
+  inventory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
   stats: {
     luck: { type: Number, default: 0 },
     strength: { type: Number, default: 0 },

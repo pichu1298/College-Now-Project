@@ -1,0 +1,33 @@
+info:
+  name: create-item
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/items"
+  body:
+    type: json
+    data: |-
+      {
+          "name": "Minor Strength Potion",
+          "description": "Boosts your strength slightly for a short time.",
+          "picture": "https://example.com/images/minor_strength.png",
+          "strength_required": 0,
+          "rarity": "common",
+          "buffs": [
+            { "stat": "strength", "value": 5 }
+          ]
+        }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: base_url
+      value: http://localhost:3000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

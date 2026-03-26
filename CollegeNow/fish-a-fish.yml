@@ -1,0 +1,24 @@
+info:
+  name: fish-a-fish
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/users/:id/fish"
+  params:
+    - name: id
+      value: 69c599b918aeec85bba5dcf5
+      type: path
+  auth: inherit
+
+runtime:
+  variables:
+    - name: base_url
+      value: http://localhost:3000
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
