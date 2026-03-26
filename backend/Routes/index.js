@@ -11,12 +11,5 @@ router.get("/", (req, res) => {
 // User routes
 router.post("/login", userController.login);
 
-//server things below
-const serverController = require("../controllers/serversController");
-
-router.post("/servers", serverController.createServer);
-router.get("/servers", serverController.getAllServers);
-router.post("/servers/:serverId/users", serverController.addGameUserToServer);
-
 // Export the router
 module.exports = router;
