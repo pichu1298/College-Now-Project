@@ -11,9 +11,11 @@ exports.createItem = async (req, res) => {
 };
 
 exports.getAllItems = async (req, res) => {
+  console.log("getAllItems is running");
   try {
+    req.body = {};
     const items = await Item.find();
-    res.status(200).json(items); // Only send JSON once
+    res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

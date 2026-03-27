@@ -33,9 +33,10 @@ exports.fish = async (req, res) => {
 
     // Weighted rarity chance influenced by luck
     const baseRarityWeights = {
-      common: 70,
-      uncommon: 20,
-      rare: 9,
+      common: 60,
+      uncommon: 25,
+      rare: 10,
+      epic: 4,
       legendary: 1,
     };
 
