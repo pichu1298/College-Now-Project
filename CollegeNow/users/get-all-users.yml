@@ -1,7 +1,7 @@
 info:
   name: get-all-users
   type: http
-  seq: 5
+  seq: 2
 
 http:
   method: POST
