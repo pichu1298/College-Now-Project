@@ -13,6 +13,10 @@ const itemSchema = new mongoose.Schema({
       value: { type: Number, required: true },
     },
   ],
+  createdBy: {
+    type: String,
+    default: "anonymous",
+  },
 });
 
 module.exports = mongoose.model("Item", itemSchema);

@@ -6,6 +6,8 @@ info:
 http:
   method: GET
   url: "{{base_url}}/items"
+  body:
+    type: none
   auth: inherit
 
 runtime:

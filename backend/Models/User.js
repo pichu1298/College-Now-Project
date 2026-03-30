@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     luck: { type: Number, default: 0 },
     strength: { type: Number, default: 0 },
   },
+  createdItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
 });
 
 module.exports = mongoose.model("User", userSchema);

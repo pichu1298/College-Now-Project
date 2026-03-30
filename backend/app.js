@@ -4,8 +4,8 @@ const app = express();
 require("./DB/mongoose");
 const routes = require("./Routes/index");
 
-// Parse JSON for all requests
-app.use(express.json());
+// Parse JSON for requests with bodies (POST, PUT, PATCH)
+app.use(express.json({ strict: false }));
 
 // Your routes
 app.use("/", routes);
