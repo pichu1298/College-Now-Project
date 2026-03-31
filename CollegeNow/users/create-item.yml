@@ -1,14 +1,14 @@
 info:
   name: create-item
   type: http
-  seq: 2
+  seq: 1
 
 http:
   method: POST
   url: "{{base_url}}/users/:id/items"
   params:
     - name: id
-      value: 69ca8e83da8adb6d25eefedf
+      value: 69ca8e8
       type: path
   body:
     type: json

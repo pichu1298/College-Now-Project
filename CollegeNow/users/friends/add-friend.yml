@@ -1,15 +1,21 @@
 info:
-  name: fish-a-fish
+  name: add-friend
   type: http
-  seq: 2
+  seq: 4
 
 http:
   method: POST
-  url: "{{base_url}}/users/:id/fish"
+  url: "{{base_url}}/users/:id/friends"
   params:
     - name: id
-      value: 69ca8e83da8adb6d25eefedf69cbdf53ba0954ed1f6c14d4
+      value: 69cbdf4fba0954ed1f6c14d2
       type: path
+  body:
+    type: json
+    data: |-
+      {
+        "friendId": "69cbddc12b742596edbfc04c"
+      }
   auth: inherit
 
 runtime:

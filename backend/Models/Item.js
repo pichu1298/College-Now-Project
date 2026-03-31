@@ -13,10 +13,12 @@ const itemSchema = new mongoose.Schema({
       value: { type: Number, required: true },
     },
   ],
-  createdBy: {
-    type: String,
-    default: "anonymous",
-  },
+  createdBy: [
+    {
+      name: { type: String, default: "anonymous" },
+      id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    },
+  ],
 });
 
 module.exports = mongoose.model("Item", itemSchema);

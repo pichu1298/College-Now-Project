@@ -1,14 +1,14 @@
 info:
-  name: fish-a-fish
+  name: get-friends
   type: http
   seq: 2
 
 http:
-  method: POST
-  url: "{{base_url}}/users/:id/fish"
+  method: GET
+  url: "{{base_url}}/users/:id/friends"
   params:
     - name: id
-      value: 69ca8e83da8adb6d25eefedf69cbdf53ba0954ed1f6c14d4
+      value: 69cbdf53ba0954ed1f6c14d4
       type: path
   auth: inherit
 

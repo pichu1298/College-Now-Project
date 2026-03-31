@@ -9,14 +9,19 @@ router.get("/", (req, res) => {
   res.json({ message: "Welcome" });
 });
 
-// User routes
-router.get("/users", userController.getAllUsers);
 router.post("/login", userController.login);
 
 // Item routes
 router.get("/items", itemController.getAllItems);
 
 // User game actions
+
+//gets
+router.get("/users", userController.getAllUsers);
+router.get("/users/:id/friends", userController.getFriendList);
+
+//post
+router.post("/users/:id/friends", userController.addFriendToFriendList);
 router.post("/users/:id/items", userController.createItem); // Make sure this exists
 router.post("/users/:id/fish", userController.fish); // Make sure this exists
 

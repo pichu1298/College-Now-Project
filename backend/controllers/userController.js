@@ -131,6 +131,14 @@ exports.createItem = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    const existingItem = await Item.findOne({
+      name: req.body.name,
+      createdBy: { id: user._id },
+    });
+    if (existingItem) {
+      return res.status(400).json({ error: "Item already exists" });
+    }
+
     const totalValueBuffs = req.body.buffs.reduce(
       (total, buff) => total + buff.value,
       0,
@@ -146,6 +154,62 @@ exports.createItem = async (req, res) => {
     const item = new Item(req.body);
     await item.save();
     res.status(201).json(item);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.addFriendToFriendList = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const friendId = req.body.friendId;
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (userId === friendId) {
+      return res
+        .status(400)
+        .json({ error: "You look lonely... No, you cannot add yourself" });
+    }
+
+    if (!user || !friend) {
+      return res.status(404).json({ error: "User or friend not found" });
+    }
+
+    if (user.friends.includes(friendId)) {
+      return res.status(400).json({ error: "Already friends" });
+    }
+
+    user.friends.push(friendId);
+    friend.friends.push(userId);
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json({ message: "Friend added successfully", user });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getFriendList = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).populate("friends");
+
+    if (user.friends.length === 0) {
+      return res.status(200).json({
+        message: "No friends found, you're lonely aren't you?",
+        friends: [],
+      });
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ friends: user.friends });
   } catch (error) {
     res.status(500).json(error);
   }
