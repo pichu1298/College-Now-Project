@@ -1,5 +1,6 @@
 const Item = require("../Models/Item");
 const User = require("../Models/User");
+const ItemDex = require("../Models/ItemDex");
 
 exports.login = async (req, res) => {
   try {
@@ -93,6 +94,22 @@ exports.fish = async (req, res) => {
 
     // Success: give fish
     user.inventory.push(fish._id);
+
+    // Update ItemDex entry
+    const itemDexEntry = await ItemDex.findOne({
+      userId: user._id,
+      itemId: fish._id,
+    });
+
+    if (itemDexEntry) {
+      itemDexEntry.timesFished += 1;
+      if (itemDexEntry.discovered === false) {
+        itemDexEntry.discovered = true;
+        itemDexEntry.discoveredAt = new Date();
+      }
+      await itemDexEntry.save();
+    }
+
     await user.save();
 
     res.status(200).json({
@@ -133,7 +150,7 @@ exports.createItem = async (req, res) => {
 
     const existingItem = await Item.findOne({
       name: req.body.name,
-      createdBy: { id: user._id },
+      createdById: user._id,
     });
     if (existingItem) {
       return res.status(400).json({ error: "Item already exists" });
@@ -149,10 +166,27 @@ exports.createItem = async (req, res) => {
     }
 
     req.body.rarity = getRarityFromBuffValue(totalValueBuffs);
-    req.body.createdBy = user.username || "anonymous";
+    req.body.createdById = userId;
+    req.body.createdByName = user.username || "anonymous";
 
     const item = new Item(req.body);
     await item.save();
+
+    // Add item to all users' item_dex
+    const allUsers = await User.find();
+    for (const u of allUsers) {
+      const itemDexEntry = new ItemDex({
+        userId: u._id,
+        itemId: item._id,
+        timesFished: 0,
+        discovered: u._id.equals(userId) ? true : false, // Only creator has discovered it
+        discoveredAt: u._id.equals(userId) ? new Date() : null,
+      });
+      await itemDexEntry.save();
+      u.item_dex.push(itemDexEntry._id);
+      await u.save();
+    }
+
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json(error);
@@ -210,6 +244,24 @@ exports.getFriendList = async (req, res) => {
     }
 
     res.status(200).json({ friends: user.friends });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.getItemDex = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).populate({
+      path: "item_dex",
+      populate: { path: "itemId" },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ item_dex: user.item_dex });
   } catch (error) {
     res.status(500).json(error);
   }

@@ -6,19 +6,22 @@ const itemSchema = new mongoose.Schema({
   picture: { type: String, required: true },
   strength_required: { type: Number, required: true },
 
-  rarity: { type: String, required: true },
+  rarity: { type: String, required: false, default: "common" },
   buffs: [
     {
       stat: { type: String, required: true },
       value: { type: Number, required: true },
     },
   ],
-  createdBy: [
-    {
-      name: { type: String, default: "anonymous" },
-      id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    },
-  ],
+  createdById: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  createdByName: {
+    type: String,
+    default: "anonymous",
+  },
 });
 
 module.exports = mongoose.model("Item", itemSchema);

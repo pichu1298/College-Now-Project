@@ -8,7 +8,7 @@ http:
   url: "{{base_url}}/users/:id/items"
   params:
     - name: id
-      value: 69ca8e8
+      value: 69cd301f2febed762503caa6
       type: path
   body:
     type: json

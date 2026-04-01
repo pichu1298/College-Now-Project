@@ -19,6 +19,7 @@ router.get("/items", itemController.getAllItems);
 //gets
 router.get("/users", userController.getAllUsers);
 router.get("/users/:id/friends", userController.getFriendList);
+router.get("/users/:id/itemDex", userController.getItemDex);
 
 //post
 router.post("/users/:id/friends", userController.addFriendToFriendList);
