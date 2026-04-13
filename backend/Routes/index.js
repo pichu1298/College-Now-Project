@@ -14,7 +14,7 @@ router.post("/login", userController.login);
 // Item routes
 router.get("/items", itemController.getAllItems);
 
-// User game actions
+// User routes
 
 //gets
 router.get("/users", userController.getAllUsers);
@@ -23,8 +23,8 @@ router.get("/users/:id/itemDex", userController.getItemDex);
 
 //post
 router.post("/users/:id/friends", userController.addFriendToFriendList);
-router.post("/users/:id/items", userController.createItem); // Make sure this exists
-router.post("/users/:id/fish", userController.fish); // Make sure this exists
+router.post("/users/:id/items", userController.createItem); //lets user create an item
+router.post("/users/:id/fish", userController.fish); //fishes
 
 // Export the router
 module.exports = router;
