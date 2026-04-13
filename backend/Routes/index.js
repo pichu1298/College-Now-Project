@@ -4,10 +4,10 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const itemController = require("../controllers/itemController");
 
-// Example route
-router.get("/", (req, res) => {
-  res.json({ message: "Welcome" });
-});
+// // Example route -> this likely is not going to be used
+// router.get("/", (req, res) => {
+//   res.json({ message: "Welcome" });
+// });
 
 router.post("/login", userController.login);
 
