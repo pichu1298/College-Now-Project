@@ -175,12 +175,13 @@ exports.createItem = async (req, res) => {
     // Add item to all users' item_dex
     const allUsers = await User.find();
     for (const u of allUsers) {
+      const isCreator = u._id.equals(userId);
       const itemDexEntry = new ItemDex({
         userId: u._id,
         itemId: item._id,
         timesFished: 0,
-        discovered: false,
-        discoveredAt: null,
+        discovered: isCreator, // True only for the creator
+        discoveredAt: isCreator ? new Date() : null,
       });
       await itemDexEntry.save();
       u.item_dex.push(itemDexEntry._id);
