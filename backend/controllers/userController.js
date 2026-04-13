@@ -179,8 +179,8 @@ exports.createItem = async (req, res) => {
         userId: u._id,
         itemId: item._id,
         timesFished: 0,
-        discovered: u._id.equals(userId) ? true : false, // Only creator has discovered it
-        discoveredAt: u._id.equals(userId) ? new Date() : null,
+        discovered: false,
+        discoveredAt: null,
       });
       await itemDexEntry.save();
       u.item_dex.push(itemDexEntry._id);
