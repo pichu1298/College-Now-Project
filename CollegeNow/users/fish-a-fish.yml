@@ -8,7 +8,7 @@ http:
   url: "{{base_url}}/users/:id/fish"
   params:
     - name: id
-      value: 69cd301f2febed762503caa6
+      value: 69dd034da3fe37e4d7a61724
       type: path
   auth: inherit
 

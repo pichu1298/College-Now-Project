@@ -8,13 +8,13 @@ http:
   url: "{{base_url}}/users/:id/items"
   params:
     - name: id
-      value: 69cd301f2febed762503caa6
+      value: 69dd034da3fe37e4d7a61724
       type: path
   body:
     type: json
     data: |-
       {
-          "name": "Minor Strength Potion",
+          "name": "Minor Heh Potion",
           "description": "Boosts your strength slightly for a short time.",
           "picture": "https://example.com/images/minor_strength.png",
           "strength_required": 0,
