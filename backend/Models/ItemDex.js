@@ -10,7 +10,6 @@ const itemDexSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Item",
     required: true,
-    unique: true,
   },
   timesFished: { type: Number, default: 1 },
   discovered: { type: Boolean, default: false },

@@ -1,14 +1,32 @@
 const Item = require("../Models/Item");
 const User = require("../Models/User");
 const ItemDex = require("../Models/ItemDex");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+// Simple login - creates new user if doesn't exist
 exports.login = async (req, res) => {
   try {
-    const user = new User(req.body);
-    await user.save();
-    res.json(user);
+    let user = await User.findOne({ username: req.body.username });
+
+    if (!user) {
+      // Hash password before saving
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      user = new User({
+        username: req.body.username,
+        password: hashedPassword,
+      });
+      await user.save();
+    }
+
+    const token = signToken(user._id);
+    res.json({ user, token });
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Login error:", error); // Log the actual error
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -21,9 +39,22 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 exports.fish = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate("inventory");
+    const user = await User.findById(req.params.id).populate({
+      path: "inventory",
+      populate: { path: "itemId" },
+    });
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const allItems = await Item.find();
@@ -32,8 +63,8 @@ exports.fish = async (req, res) => {
 
     // Total stats including buffs
     let totalStats = { ...user.stats };
-    user.inventory.forEach((item) => {
-      (item.buffs || []).forEach((buff) => {
+    user.inventory.forEach((inventoryItem) => {
+      (inventoryItem.itemId.buffs || []).forEach((buff) => {
         totalStats[buff.stat] = (totalStats[buff.stat] || 0) + buff.value;
       });
     });
@@ -93,7 +124,19 @@ exports.fish = async (req, res) => {
     }
 
     // Success: give fish
-    user.inventory.push(fish._id);
+    // Fix: push object with itemId and quantity, not just the ID
+    const existingInventoryItem = user.inventory.find(
+      (item) => item.itemId._id.toString() === fish._id.toString(),
+    );
+
+    if (existingInventoryItem) {
+      existingInventoryItem.quantity += 1;
+    } else {
+      user.inventory.push({
+        itemId: fish._id,
+        quantity: 1,
+      });
+    }
 
     // Update ItemDex entry
     const itemDexEntry = await ItemDex.findOne({
@@ -146,14 +189,6 @@ exports.createItem = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    }
-
-    const existingItem = await Item.findOne({
-      name: req.body.name,
-      createdById: user._id,
-    });
-    if (existingItem) {
-      return res.status(400).json({ error: "Item already exists" });
     }
 
     const totalValueBuffs = req.body.buffs.reduce(
@@ -233,15 +268,15 @@ exports.getFriendList = async (req, res) => {
     const userId = req.params.id;
     const user = await User.findById(userId).populate("friends");
 
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     if (user.friends.length === 0) {
       return res.status(200).json({
         message: "No friends found, you're lonely aren't you?",
         friends: [],
       });
-    }
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
     }
 
     res.status(200).json({ friends: user.friends });

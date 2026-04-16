@@ -1,0 +1,12 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{bearer-token}}
+}
+
+vars:pre-request {
+  base_url: http://localhost:3000/
+  bearerToken: 
+}

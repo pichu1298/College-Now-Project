@@ -1,9 +1,18 @@
-function trainerCheck(req, res, next) {
-  if (req.query.admin === "true") {
+const jwt = require("jsonwebtoken");
+
+function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
     next();
-  } else {
-    res.status(403).send("Access denied");
+  } catch {
+    res.status(401).json({ error: "Invalid or expired token" });
   }
 }
 
-//? = query parameter , = sign is value
+module.exports = verifyToken;

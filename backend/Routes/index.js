@@ -3,28 +3,28 @@ const router = express.Router();
 
 const userController = require("../controllers/userController");
 const itemController = require("../controllers/itemController");
+const verifyToken = require("../middleware/auth");
 
-// // Example route -> this likely is not going to be used
-// router.get("/", (req, res) => {
-//   res.json({ message: "Welcome" });
-// });
+// Public routes
+router.get("/", (req, res) => {
+  res.json({ message: "Welcome" });
+});
 
 router.post("/login", userController.login);
-
-// Item routes
 router.get("/items", itemController.getAllItems);
 
-// User routes
+// Protected routes - require token
+router.get("/users", verifyToken, userController.getAllUsers);
+router.get("/users/:id/friends", verifyToken, userController.getFriendList);
+router.get("/users/:id/itemDex", verifyToken, userController.getItemDex);
 
-//gets
-router.get("/users", userController.getAllUsers);
-router.get("/users/:id/friends", userController.getFriendList);
-router.get("/users/:id/itemDex", userController.getItemDex);
-
-//post
-router.post("/users/:id/friends", userController.addFriendToFriendList);
-router.post("/users/:id/items", userController.createItem); //lets user create an item
-router.post("/users/:id/fish", userController.fish); //fishes
+router.post(
+  "/users/:id/friends",
+  verifyToken,
+  userController.addFriendToFriendList,
+);
+router.post("/users/:id/items", verifyToken, userController.createItem);
+router.post("/users/:id/fish", verifyToken, userController.fish);
 
 // Export the router
 module.exports = router;

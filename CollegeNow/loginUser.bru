@@ -1,0 +1,28 @@
+meta {
+  name: loginUser
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "SeaExplorer",
+    "password": "password456"
+  }
+}
+
+script:post-response {
+  const responseJson = res.getBody();
+  bru.setVar("access_token", responseJson.bearerToken)
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
