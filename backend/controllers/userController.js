@@ -302,3 +302,30 @@ exports.getItemDex = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.changeProfilePicture = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    // save file path
+    user.profile_picture = `/uploads/${req.file.filename}`;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Profile picture updated successfully",
+      profile_picture: user.profile_picture,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

@@ -17,9 +17,14 @@ body:json {
   }
 }
 
-script:post-response {
-  const responseJson = res.getBody();
-  bru.setVar("access_token", responseJson.bearerToken)
+tests {
+  const body = res.body;
+  
+  const token = body.token;
+  
+  bru.setEnvVar("authToken", token);
+  
+  console.log("Saved token:", token);
 }
 
 settings {

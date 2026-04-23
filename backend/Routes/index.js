@@ -3,7 +3,12 @@ const router = express.Router();
 
 const userController = require("../controllers/userController");
 const itemController = require("../controllers/itemController");
+const upload = require("../middleware/upload");
 const verifyToken = require("../middleware/auth");
+
+// console.log("UPLOAD TYPE:", typeof upload);
+// console.log("UPLOAD:", upload);
+// console.log("HAS SINGLE:", upload?.single);
 
 // Public routes
 router.get("/", (req, res) => {
@@ -25,6 +30,15 @@ router.post(
 );
 router.post("/users/:id/items", verifyToken, userController.createItem);
 router.post("/users/:id/fish", verifyToken, userController.fish);
+
+//put methods
+
+router.put(
+  "/users/profile-picture",
+  verifyToken,
+  upload.single("profile_picture"),
+  userController.changeProfilePicture,
+);
 
 // Export the router
 module.exports = router;

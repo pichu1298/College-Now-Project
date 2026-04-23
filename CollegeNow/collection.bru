@@ -3,10 +3,10 @@ auth {
 }
 
 auth:bearer {
-  token: {{bearer-token}}
+  token: {{authToken}}
 }
 
 vars:pre-request {
   base_url: http://localhost:3000/
-  bearerToken: 
+  authToken: 
 }
