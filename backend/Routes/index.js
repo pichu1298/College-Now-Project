@@ -6,10 +6,6 @@ const itemController = require("../controllers/itemController");
 const upload = require("../middleware/upload");
 const verifyToken = require("../middleware/auth");
 
-// console.log("UPLOAD TYPE:", typeof upload);
-// console.log("UPLOAD:", upload);
-// console.log("HAS SINGLE:", upload?.single);
-
 // Public routes
 router.get("/", (req, res) => {
   res.json({ message: "Welcome" });
