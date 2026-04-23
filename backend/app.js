@@ -2,6 +2,7 @@ const express = require("express");
 const port = process.env.PORT || 3000;
 const app = express();
 require("./DB/mongoose");
+require("./DB/cloudinary");
 const routes = require("./Routes/index");
 const path = require("path");
 
