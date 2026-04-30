@@ -5,6 +5,7 @@ const userController = require("../controllers/userController");
 const itemController = require("../controllers/itemController");
 const upload = require("../middleware/upload");
 const verifyToken = require("../middleware/auth");
+const uploadImage = require("../middleware/upload");
 
 // Public routes
 router.get("/", (req, res) => {
@@ -32,7 +33,7 @@ router.post("/users/:id/fish", verifyToken, userController.fish);
 router.put(
   "/users/profile-picture",
   verifyToken,
-  upload.single("profile_picture"),
+  uploadImage,
   userController.changeProfilePicture,
 );
 
