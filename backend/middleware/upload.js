@@ -1,22 +1,9 @@
-const cloudinary = require("cloudinary").v2;
-const uploadImage = async (imagePath) => {
-  // Use the uploaded file's name as the asset's public ID and
-  // allow overwriting the asset with new versions
-  const options = {
-    use_filename: true,
-    unique_filename: false,
-    overwrite: true,
-  };
+const multer = require("multer");
 
-  try {
-    // Upload the image
-    const result = await cloudinary.uploader.upload(imagePath, options);
-    console.log(result);
-    return result.public_id;
-  } catch (error) {
-    console.error(error);
-  }
-};
-// module.exports = { upload, uploadImage };
+// store in memory (better for Cloudinary)
+const storage = multer.memoryStorage();
 
-module.exports = uploadImage;
+const upload = multer({ storage });
+
+// IMPORTANT: match the field name from frontend
+module.exports = upload.single("image");

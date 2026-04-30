@@ -303,29 +303,37 @@ exports.getItemDex = async (req, res) => {
   }
 };
 
+const cloudinary = require("cloudinary").v2;
+
 exports.changeProfilePicture = async (req, res) => {
   try {
-    const userId = req.user.id;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    // save file path
-    user.profile_picture = `/uploads/${req.file.filename}`;
+    const streamUpload = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: "image" },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          },
+        );
+        stream.end(req.file.buffer);
+      });
+    };
 
-    await user.save();
+    const result = await streamUpload();
 
-    res.status(200).json({
-      message: "Profile picture updated successfully",
-      profile_picture: user.profile_picture,
+    // Save result.secure_url to your DB here
+    // e.g. user.profilePicture = result.secure_url
+
+    res.json({
+      message: "Profile picture updated",
+      url: result.secure_url,
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
