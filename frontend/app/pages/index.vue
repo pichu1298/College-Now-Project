@@ -6,6 +6,18 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "../../stores/user";
+import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
+
+async function loginUser() {
+  const user = {
+    username: "testuser",
+    password: "password123",
+  };
+  userStore.login(user);
+}
+
+onMounted(() => {
+  loginUser();
+});
 </script>

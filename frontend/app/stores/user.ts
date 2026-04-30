@@ -3,17 +3,12 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore("user", () => {
   const user = ref<User | null>(null);
 
-  const setUser = (newUser: User) => {
-    user.value = newUser;
-  };
-
-  const clearUser = () => {
-    user.value = null;
-  };
+  function login(username: string, password: string) {
+    user.value = { username, password };
+  }
 
   return {
     user,
-    setUser,
-    clearUser,
+    login,
   };
 });
