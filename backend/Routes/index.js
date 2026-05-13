@@ -37,5 +37,8 @@ router.put(
   userController.changeProfilePicture,
 );
 
+//deleting methods
+router.delete("/users/:id", verifyToken, userController.deleteUser);
+
 // Export the router
 module.exports = router;

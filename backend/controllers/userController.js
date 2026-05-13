@@ -49,6 +49,14 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 exports.fish = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).populate({
